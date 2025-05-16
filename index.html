@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Apprendre SQL - Exercices</title>
+
+    <!-- Scripts principaux -->
+    <script src="app.js" defer></script>
+
+    <!-- Feuilles de style -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/code.css" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Composants Web -->
+    <script src="components/header.js" defer></script>
+    <script src="components/footer.js" defer></script>
+  </head>
+  <body>
+    <my-header></my-header>
+
+    <main>
+      <section id="ex1" class="exercise visible">
+        <h2>🟩 Niveau 1 – Lecture simple</h2>
+        <p class="objectif">
+          <strong>Objectif :</strong> Lire les données d'une seule table et
+          découvrir la clause <code>TOP</code>.
+        </p>
+        <p class="consigne">
+          <strong>Consigne :</strong> Affiche les
+          <strong>20 premiers articles</strong> avec leur référence
+          (<code>AR_Ref</code>) et leur prix de vente (<code>AR_PrixVen</code>).
+        </p>
+        <p class="table-info">
+          <strong>Table :</strong> <code>F_Article</code>
+        </p>
+
+        <pre><code class="sql">SELECT TOP 20 ... 
+FROM ...</code></pre>
+
+        <button class="toggle-btn" onclick="toggleCorrection(this)">
+          Afficher la correction
+        </button>
+        <div class="correction hidden">
+            <div class="correction-header">💡 Pourquoi cette requête ?</div>
+            <div class="correction-body">
+              <p>Cette requête permet d’inspecter rapidement le contenu de la table <code>F_Article</code>. On utilise <code>TOP 20</code> pour limiter les résultats à un nombre raisonnable.</p>
+              <pre><code class="sql"><span class="sql-keyword">SELECT</span> TOP 20 AR_Ref, AR_PrixVen
+<span class="sql-keyword">FROM</span> F_Article;</code></pre>
+            </div>
+          </div>          
+      </section>
+
+      <section id="ex2" class="exercise">
+        <h2>🟦 Niveau 2 – Jointure entre tables</h2>
+        <p class="objectif"><strong>Objectif :</strong> Apprendre à relier des tables pour enrichir les données.</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour une commande fournisseur (DO_Type = 6) avec la pièce 'FA0000123', affiche : la référence article (AR_Ref), le prix unitaire (AR_PrixVen), la quantité (DL_Qte).</p>
+        <p class="table-info"><strong>Tables :</strong> <code>F_Article, F_DocLigne, F_DocEntete</code></p>
+      
+        <pre><code class="sql">SELECT ...
+FROM ...
+JOIN ...
+ON ...
+WHERE ...</code></pre>
+      
+        <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
+        <div class="correction hidden">
+          <div class="correction-header">💡 Pourquoi cette requête ?</div>
+          <div class="correction-body">
+            <p>On utilise ici une jointure interne (INNER JOIN) pour ne conserver que les lignes qui correspondent à une commande fournisseur donnée. Cela permet de lier les articles aux lignes de commande, puis à leur en-tête, en filtrant sur DO_Type = 6.</p>
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref, a.AR_PrixVen, l.DL_Qte
+<span class="sql-keyword">FROM</span> F_Article a
+<span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
+<span class="sql-keyword">JOIN</span> F_DocEntete d <span class="sql-keyword">ON</span> l.DO_Piece = d.DO_Piece
+<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA0000123</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>;</code></pre>                
+          </div>
+        </div>
+      </section>
+      
+      <section id="ex3" class="exercise">
+        <h2>🟨 Niveau 3 – LEFT JOIN et valeurs manquantes</h2>
+        <p class="objectif"><strong>Objectif :</strong> Comprendre comment détecter des données absentes à l’aide des jointures externes.</p>
+        <p class="consigne"><strong>Consigne :</strong> Affiche les articles jamais utilisés dans aucun document.</p>
+        <p class="table-info"><strong>Tables :</strong> <code>F_Article, F_DocLigne</code></p>
+      
+        <pre><code class="sql">SELECT ...
+FROM ...
+LEFT JOIN ...
+ON ...
+WHERE ...</code></pre>
+      
+        <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
+        <div class="correction hidden">
+          <div class="correction-header">💡 Pourquoi cette requête ?</div>
+          <div class="correction-body">
+            <p>Le LEFT JOIN permet de garder tous les articles, qu’ils soient utilisés ou non. Grâce au filtre WHERE l.AR_Ref IS NULL, on récupère uniquement ceux qui ne sont liés à aucune ligne de document.</p>
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref, a.AR_PrixVen
+<span class="sql-keyword">FROM</span> F_Article a
+<span class="sql-keyword">LEFT JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
+<span class="sql-keyword">WHERE</span> l.AR_Ref <span class="sql-keyword">IS</span> <span class="sql-keyword">NULL</span>;</code></pre>
+          </div>
+        </div>
+      </section>
+      
+      <section id="ex4" class="exercise">
+        <h2>🟧 Niveau 4 – Agrégation par article</h2>
+        <p class="objectif"><strong>Objectif :</strong> Faire des calculs de totaux et montants groupés.</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour la pièce 'FA0000123', affiche : la référence article, la quantité totale, le montant total (quantité × prix unitaire).</p>
+        <p class="table-info"><strong>Tables :</strong> <code>F_Article, F_DocLigne, F_DocEntete</code></p>
+      
+        <pre><code class="sql">SELECT ...
+FROM ...
+JOIN ...
+GROUP BY ...</code></pre>
+      
+        <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
+        <div class="correction hidden">
+          <div class="correction-header">💡 Pourquoi cette requête ?</div>
+          <div class="correction-body">
+            <p>On regroupe les lignes par article pour calculer des totaux par AR_Ref. On multiplie la quantité (DL_Qte) par le prix unitaire (DL_PrixUnitaire) pour obtenir un montant, et on utilise SUM(...) pour agréger.</p>
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> 
+a.AR_Ref,
+<span class="sql-keyword">SUM</span>(l.DL_Qte) <span class="sql-keyword">AS</span> QuantiteTotale,
+<span class="sql-keyword">SUM</span>(l.DL_Qte * l.DL_PrixUnitaire) <span class="sql-keyword">AS</span> MontantTotal
+<span class="sql-keyword">FROM</span> F_Article a
+<span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
+<span class="sql-keyword">JOIN</span> F_DocEntete d <span class="sql-keyword">ON</span> l.DO_Piece = d.DO_Piece
+<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA0000123</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>
+<span class="sql-keyword">GROUP BY</span> a.AR_Ref;</code></pre>                
+          </div>
+        </div>
+      </section>
+      
+      <section id="ex5" class="exercise">
+        <h2>🟥 Niveau 5 – Agrégation par client et par année</h2>
+        <p class="objectif"><strong>Objectif :</strong> Travailler sur des regroupements complexes avec des conditions temporelles.</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour chaque client, affiche : le nombre de documents de vente en 2024, le chiffre d’affaires total. Trie les résultats du plus gros au plus petit chiffre d'affaires.</p>
+        <p class="table-info"><strong>Tables :</strong> <code>F_DocEntete, F_DocLigne</code></p>
+      
+        <pre><code class="sql">SELECT ...
+FROM ...
+JOIN ...
+WHERE ...
+GROUP BY ...
+ORDER BY ...</code></pre>
+      
+        <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
+        <div class="correction hidden">
+          <div class="correction-header">💡 Pourquoi cette requête ?</div>
+          <div class="correction-body">
+            <p>On filtre les documents de type vente (DO_Type IN (6,7)) créés en 2024. La jointure permet d’associer les entêtes (F_DocEntete) aux lignes (F_DocLigne) et d’agréger les montants par client (CT_Num).</p>
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> 
+d.CT_Num <span class="sql-keyword">AS</span> CodeClient,
+<span class="sql-keyword">COUNT</span>(<span class="sql-keyword">DISTINCT</span> d.DO_Piece) <span class="sql-keyword">AS</span> NbDocuments,
+<span class="sql-keyword">SUM</span>(l.DL_Qte * l.DL_PrixUnitaire) <span class="sql-keyword">AS</span> ChiffreAffaires
+<span class="sql-keyword">FROM</span> F_DocEntete d
+<span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> d.DO_Piece = l.DO_Piece
+<span class="sql-keyword">WHERE</span> d.DO_Type <span class="sql-keyword">IN</span> (<span class="sql-func">6</span>, <span class="sql-func">7</span>) <span class="sql-keyword">AND</span> <span class="sql-func">YEAR</span>(d.DO_Date) = <span class="sql-func">2024</span>
+<span class="sql-keyword">GROUP BY</span> d.CT_Num
+<span class="sql-keyword">ORDER BY</span> ChiffreAffaires <span class="sql-keyword">DESC</span>;</code></pre>
+          </div>
+        </div>
+      </section>
+      
+      <section id="ex6" class="exercise">
+        <h2>🟪 Niveau 6 – Sous-requêtes et comparaison dynamique</h2>
+        <p class="objectif"><strong>Objectif :</strong> Apprendre à comparer des données à des agrégats globaux, et découvrir les sous-requêtes scalaires.</p>
+        <p class="consigne"><strong>Consigne :</strong> Affiche les articles dont le prix de vente est supérieur à la moyenne et dont le prix d’achat moyen (AR_PrixAch) est non nul. Trie les résultats par prix de vente décroissant.</p>
+        <p class="table-info"><strong>Tables :</strong> <code>F_Article</code></p>
+      
+        <pre><code class="sql">SELECT ...
+FROM ...
+WHERE ...
+ORDER BY ...</code></pre>
+      
+        <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
+        <div class="correction hidden">
+          <div class="correction-header">💡 Pourquoi cette requête ?</div>
+          <div class="correction-body">
+            <p>Cette requête compare chaque article à la moyenne générale des prix de vente. Elle utilise une sous-requête scalaire dans le WHERE, et vérifie aussi que le prix d’achat est bien renseigné.</p>
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> AR_Ref, AR_PrixVen, AR_PrixAch
+<span class="sql-keyword">FROM</span> F_Article
+<span class="sql-keyword">WHERE</span> 
+    AR_PrixVen &gt; (<span class="sql-keyword">SELECT</span> <span class="sql-keyword">AVG</span>(AR_PrixVen) <span class="sql-keyword">FROM</span> F_Article)
+    <span class="sql-keyword">AND</span> AR_PrixAch <span class="sql-keyword">IS NOT NULL</span>
+    <span class="sql-keyword">AND</span> AR_PrixAch &gt; <span class="sql-func">0</span>
+<span class="sql-keyword">ORDER BY</span> AR_PrixVen <span class="sql-keyword">DESC</span>;</code></pre>                
+          </div>
+        </div>
+      </section>
+      
+    </main>
+
+    <my-footer></my-footer>
+
+  </body>
+</html>

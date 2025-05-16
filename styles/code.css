@@ -1,0 +1,35 @@
+  /* ====================================
+     💻 Code blocks & SQL highlight
+  ==================================== */
+  pre {
+    background-color: #f4f4f4;
+    color: #1a1a1a;
+    padding: 1rem;
+    overflow-x: auto;
+    border-radius: 4px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+    border: 1px solid var(--border);
+    margin-top: 1rem;
+  }
+  
+  code {
+    font-family: SFMono-Regular, Consolas, Menlo, monospace;
+  }
+  
+  code.sql {
+    color: #857f7f;
+  }
+  
+  .sql-keyword {
+    color: #569cd6;
+    font-weight: bold;
+  }
+  
+  .sql-func {
+    color: #dcdcaa;
+  }
+  
+  .sql-table {
+    color: #4ec9b0;
+  }

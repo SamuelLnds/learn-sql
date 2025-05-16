@@ -1,0 +1,54 @@
+/* ====================================
+   🎨 Variables globales
+==================================== */
+:root {
+    --bg: #ffffff;
+    --text: #1a1a1a;
+    --accent: #0077cc;
+    --nav-bg: #f8f8f8;
+    --nav-text: #333333;
+    --border: #dddddd;
+    --page-content-width: 1080px;
+  }
+  
+  /* ====================================
+     🌐 Layout & global reset
+  ==================================== */
+  body {
+    margin: 0;
+    font-family: system-ui, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  /* ====================================
+     🌙 Thème sombre
+  ==================================== */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1e1e1e;
+      --text: #eeeeee;
+      --accent: #1f6ca3;
+      --nav-bg: #2c2c2c;
+      --nav-text: #ffffff;
+      --border: #444444;
+    }
+  
+    pre {
+      background-color: #1a1a1a;
+      color: #e8e8e8;
+    }
+  
+    code.sql {
+      color: #d8d8d8;
+    }
+  
+    .correction {
+      background-color: #2c2c2c;
+    }
+  }
+  

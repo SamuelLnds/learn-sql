@@ -1,0 +1,125 @@
+ /* ====================================
+     🧭 Navigation
+  ==================================== */
+  header {
+    background-color: var(--nav-bg);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  nav {
+    max-width: var(--page-content-width);
+    margin-inline: auto;
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    padding: 1rem;
+    margin: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  nav button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--nav-text);
+    padding: 0.5rem 1rem;
+  }
+  
+  nav button:hover {
+    color: var(--accent);
+  }
+  
+  /* ====================================
+     📄 Contenu principal
+  ==================================== */
+  main {
+    max-width: var(--page-content-width);
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .exercise {
+    display: none;
+  }
+  
+  .exercise.visible {
+    display: block;
+  }
+  
+  .exercise h2 {
+    margin-top: 0;
+  }
+  
+  /* ====================================
+     📝 Typo pédagogique
+  ==================================== */
+  .objectif,
+  .consigne,
+  .table-info {
+    margin: 1rem 0;
+  }
+  
+  .objectif strong {
+    color: royalblue;
+  }
+  
+  .consigne strong {
+    color: darkorange;
+  }
+  
+  .table-info strong {
+    color: fuchsia;
+  }
+  
+  /* ====================================
+     🧠 Correction bloc
+  ==================================== */
+  .toggle-btn {
+    margin-top: 1rem;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.95rem;
+  }
+  
+  .toggle-btn:hover {
+    opacity: 0.9;
+  }
+  
+  .correction {
+    margin-top: 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--nav-bg);
+  }
+  
+  .correction-header {
+    background-color: var(--accent);
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .correction-body {
+    padding: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .hidden {
+    display: none;
+  }

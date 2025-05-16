@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ressources SQL – Apprendre SQL</title>
+
+    <!-- Scripts principaux -->
+    <script src="app.js" defer></script>
+
+    <!-- Feuilles de style -->
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="stylesheet" href="styles/code.css" />
+    <link rel="stylesheet" href="styles/ressources.css" />
+    <link rel="stylesheet" href="styles/style.css" />
+
+    <!-- Composants Web -->
+    <script src="components/header.js" defer></script>
+    <script src="components/footer.js" defer></script>
+  </head>
+  <body>
+    <my-header></my-header>
+
+    <aside id="toc">
+      <button id="toc-toggle" aria-label="Afficher le sommaire" aria-expanded="false">☰ Sommaire</button>
+      <nav>
+        <h2>🧭 Sommaire</h2>
+        <ul id="toc-list">
+          <!-- Rempli dynamiquement par JS -->
+        </ul>
+      </nav>
+    </aside>    
+
+    <main>
+      <h1>📚 Ressources SQL</h1>
+    
+      <section>
+        <h2>🧩 Clauses de base</h2>
+    
+        <article>
+          <h3><code>SELECT</code> / <code>FROM</code></h3>
+          <p>
+            En SQL, une requête commence presque toujours par la clause <code class="sql-keyword">SELECT</code>, suivie de la clause <code class="sql-keyword">FROM</code>.
+          </p>
+          
+          <ul>
+            <li><code class="sql-keyword">SELECT</code> : indique quelles colonnes doivent être affichées en résultat.</li>
+            <li><code class="sql-keyword">FROM</code> : désigne la table (ou les tables) où aller chercher les données.</li>
+          </ul>
+          
+          <p>On peut aussi utiliser <code class="sql-keyword">*</code> pour dire "toutes les colonnes". Mais c'est rarement recommandé pour des raisons de performance.</p>
+          <br>
+          <p><strong>Exemple :</strong> afficher le nom et l’âge des animaux.</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, age 
+<span class="sql-keyword">FROM</span> <span class="sql-table">animaux</span>;
+          </code></pre>
+        
+          <p><strong>Table <code>animaux</code> :</strong></p>
+          <div class="result-block">
+            <table>
+              <thead>
+                <tr><th>id</th><th>nom</th><th>age</th><th>espece</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Rex</td><td>5</td><td>Chien</td></tr>
+                <tr><td>2</td><td>Mia</td><td>3</td><td>Chat</td></tr>
+                <tr><td>3</td><td>Leo</td><td>4</td><td>Lion</td></tr>
+              </tbody>
+            </table>
+          </div>
+        
+          <p><strong>Résultat :</strong></p>
+          <div class="result-block">
+            <table>
+              <thead>
+                <tr><th>nom</th><th>age</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Rex</td><td>5</td></tr>
+                <tr><td>Mia</td><td>3</td></tr>
+                <tr><td>Leo</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article>
+          <h3><code>AS</code> – Renommer une colonne ou une table</h3>
+          <p>
+            La clause <code class="sql-keyword">AS</code> permet d’attribuer un alias, c’est-à-dire un nom temporaire, à une colonne ou à une table dans une requête SQL.
+            Cela rend le résultat plus lisible ou facilite l’utilisation de noms plus courts.
+          </p>
+        
+          <ul>
+            <li>Alias de colonne : utile pour renommer une valeur calculée ou améliorer l’intitulé d’un champ en sortie.</li>
+            <li>Alias de table : souvent utilisé avec les jointures pour abréger les noms de table.</li>
+          </ul>
+        
+          <h4>🔹 Exemple 1 : renommer une colonne</h4>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, age <span class="sql-keyword">AS</span> âge_en_années
+<span class="sql-keyword">FROM</span> animaux;
+          </code></pre>
+        
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>âge_en_années</th></tr></thead>
+              <tbody>
+                <tr><td>Rex</td><td>5</td></tr>
+                <tr><td>Mia</td><td>3</td></tr>
+                <tr><td>Leo</td><td>4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        
+          <h4>🔹 Exemple 2 : alias de table dans une jointure</h4>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> a.nom, d.adoptant
+<span class="sql-keyword">FROM</span> animaux <span class="sql-keyword">AS</span> a
+<span class="sql-keyword">JOIN</span> adoptions <span class="sql-keyword">AS</span> d <span class="sql-keyword">ON</span> a.id = d.animal_id;
+          </code></pre>
+        
+          <p>Ici, <code>a</code> est un alias pour <code>animaux</code> et <code>d</code> pour <code>adoptions</code>. Cela évite de répéter les noms de table en entier dans les champs sélectionnés.</p>
+        </article>        
+      </section>
+
+      <section>
+        <h2>🔍 Filtres de sélection</h2>
+      
+        <article>
+          <p class="example-table">Table d'exemple : <code>animaux</code></p>
+          <p>Voici une table de référence utilisée dans les exemples ci-dessous :</p>
+          <div class="result-block">
+            <table>
+              <thead>
+                <tr><th>id</th><th>nom</th><th>age</th><th>espece</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>1</td><td>Rex</td><td>5</td><td>Chien</td></tr>
+                <tr><td>2</td><td>Mia</td><td>3</td><td>Chat</td></tr>
+                <tr><td>3</td><td>Leo</td><td>4</td><td>Lion</td></tr>
+                <tr><td>4</td><td>Tigrou</td><td>2</td><td>Tigre</td></tr>
+                <tr><td>5</td><td>Nina</td><td>1</td><td>Chien</td></tr>
+                <tr><td>6</td><td>Oscar</td><td>6</td><td>Chat</td></tr>
+                <tr><td>7</td><td>Max</td><td>7</td><td>Chien</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>WHERE</code></h3>
+          <p>La clause <code class="sql-keyword">WHERE</code> permet de filtrer les lignes d’une table en fonction de conditions. Elle suit la clause <code class="sql-keyword">FROM</code> et peut utiliser des opérateurs :</p>
+          <ul>
+            <li><code>=</code> : égal</li>
+            <li><code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code> : comparaisons</li>
+            <li><code>&lt;&gt;</code> : différent</li>
+          </ul>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, age
+<span class="sql-keyword">FROM</span> animaux
+<span class="sql-keyword">WHERE</span> age &gt; 4;
+          </code></pre>
+          <div class="result-block">
+            <table><thead><tr><th>nom</th><th>age</th></tr></thead>
+            <tbody>
+              <tr><td>Rex</td><td>5</td></tr>
+              <tr><td>Oscar</td><td>6</td></tr>
+              <tr><td>Max</td><td>7</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>AND</code></h3>
+          <p>Permet de combiner plusieurs conditions. Toutes doivent être vraies pour qu’une ligne soit conservée.</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, age, espece
+<span class="sql-keyword">FROM</span> animaux
+<span class="sql-keyword">WHERE</span> age &gt; 4 <span class="sql-keyword">AND</span> espece = 'Chien';
+          </code></pre>
+          <div class="result-block">
+            <table><thead><tr><th>nom</th><th>age</th><th>espece</th></tr></thead>
+            <tbody>
+              <tr><td>Rex</td><td>5</td><td>Chien</td></tr>
+              <tr><td>Max</td><td>7</td><td>Chien</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>OR</code></h3>
+          <p>Conserve les lignes qui remplissent au moins une des conditions.</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, espece
+<span class="sql-keyword">FROM</span> animaux
+<span class="sql-keyword">WHERE</span> espece = 'Chien' <span class="sql-keyword">OR</span> espece = 'Chat';
+          </code></pre>
+          <div class="result-block">
+            <table><thead><tr><th>nom</th><th>espece</th></tr></thead>
+            <tbody>
+              <tr><td>Rex</td><td>Chien</td></tr>
+              <tr><td>Mia</td><td>Chat</td></tr>
+              <tr><td>Nina</td><td>Chien</td></tr>
+              <tr><td>Oscar</td><td>Chat</td></tr>
+              <tr><td>Max</td><td>Chien</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>IN</code></h3>
+          <p>Permet de tester si une valeur est présente dans une liste. Plus lisible qu’une suite de <code>OR</code>.</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, espece
+<span class="sql-keyword">FROM</span> animaux
+<span class="sql-keyword">WHERE</span> espece <span class="sql-keyword">IN</span> ('Chien', 'Chat', 'Lion');
+          </code></pre>
+          <div class="result-block">
+            <table><thead><tr><th>nom</th><th>espece</th></tr></thead>
+            <tbody>
+              <tr><td>Rex</td><td>Chien</td></tr>
+              <tr><td>Mia</td><td>Chat</td></tr>
+              <tr><td>Leo</td><td>Lion</td></tr>
+              <tr><td>Nina</td><td>Chien</td></tr>
+              <tr><td>Oscar</td><td>Chat</td></tr>
+              <tr><td>Max</td><td>Chien</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>LIKE</code></h3>
+          <p>Permet de filtrer selon un motif (pattern).</p>
+          <ul>
+            <li><code>%</code> : plusieurs caractères</li>
+            <li><code>_</code> : un seul caractère</li>
+          </ul>
+          <p><strong>Exemple :</strong> noms commençant par M :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom
+<span class="sql-keyword">FROM</span> animaux
+<span class="sql-keyword">WHERE</span> nom <span class="sql-keyword">LIKE</span> 'M%';
+          </code></pre>
+          <div class="result-block">
+            <table><thead><tr><th>nom</th></tr></thead>
+            <tbody>
+              <tr><td>Mia</td></tr>
+              <tr><td>Max</td></tr>
+            </tbody>
+            </table>
+          </div>
+        </article> 
+
+      </section>
+
+      <section>
+        <h2>🔗 Jointures entre tables</h2>
+      
+        <p>
+          Une <strong>jointure</strong> permet de combiner les données de plusieurs tables grâce à une colonne commune (souvent une clé étrangère).
+          Cela permet d’exploiter des relations entre les entités, par exemple : associer un animal à son adoptant.
+        </p>
+      
+        <article>
+          <p class="example-table">Tables d'exemple</p>
+      
+          <p><strong>Table <code>animaux</code></strong> :</p>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>id</th><th>nom</th><th>espece</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Rex</td><td>Chien</td></tr>
+                <tr><td>2</td><td>Mia</td><td>Chat</td></tr>
+                <tr><td>3</td><td>Leo</td><td>Lion</td></tr>
+              </tbody>
+            </table>
+          </div>
+      
+          <p><strong>Table <code>adoptions</code></strong> :</p>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>id</th><th>animal_id</th><th>adoptant</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>1</td><td>Camille</td></tr>
+                <tr><td>2</td><td>3</td><td>Lucas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>INNER JOIN</code> – Lignes correspondantes uniquement</h3>
+          <p>
+            Ne garde que les lignes où une correspondance existe dans <em>les deux</em> tables.
+            Ici, seuls les animaux qui ont été adoptés s’affichent.
+          </p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> a.nom, d.adoptant
+<span class="sql-keyword">FROM</span> animaux a
+<span class="sql-keyword">INNER JOIN</span> adoptions d <span class="sql-keyword">ON</span> a.id = d.animal_id;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>adoptant</th></tr></thead>
+              <tbody>
+                <tr><td>Rex</td><td>Camille</td></tr>
+                <tr><td>Leo</td><td>Lucas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>LEFT JOIN</code> – Tous les éléments de gauche</h3>
+          <p>
+            Affiche tous les animaux, même s’ils n’ont pas été adoptés. Si aucun adoptant n’est trouvé, la colonne est remplie par <code>NULL</code>.
+          </p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> a.nom, d.adoptant
+<span class="sql-keyword">FROM</span> animaux a
+<span class="sql-keyword">LEFT JOIN</span> adoptions d <span class="sql-keyword">ON</span> a.id = d.animal_id;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>adoptant</th></tr></thead>
+              <tbody>
+                <tr><td>Rex</td><td>Camille</td></tr>
+                <tr><td>Mia</td><td></td></tr>
+                <tr><td>Leo</td><td>Lucas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>RIGHT JOIN</code> – Tous les éléments de droite</h3>
+          <p>
+            Affiche tous les enregistrements d’adoptions, même si aucun animal correspondant n’est trouvé dans <code>animaux</code>. 
+            Peu courant, et non supporté par SQLite.
+          </p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> a.nom, d.adoptant
+<span class="sql-keyword">FROM</span> animaux a
+<span class="sql-keyword">RIGHT JOIN</span> adoptions d <span class="sql-keyword">ON</span> a.id = d.animal_id;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>adoptant</th></tr></thead>
+              <tbody>
+                <tr><td>Rex</td><td>Camille</td></tr>
+                <tr><td>Leo</td><td>Lucas</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3>💡 Trouver les non-adoptés (LEFT JOIN + <code>IS NULL</code>)</h3>
+          <p>
+            Pour identifier les animaux qui n’ont <strong>aucun</strong> enregistrement d’adoption, on utilise un <code>LEFT JOIN</code> suivi d’un filtre <code>WHERE ... IS NULL</code>.
+          </p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> a.nom
+<span class="sql-keyword">FROM</span> animaux a
+<span class="sql-keyword">LEFT JOIN</span> adoptions d <span class="sql-keyword">ON</span> a.id = d.animal_id
+<span class="sql-keyword">WHERE</span> d.id <span class="sql-keyword">IS NULL</span>;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th></tr></thead>
+              <tbody>
+                <tr><td>Mia</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+      </section>      
+      
+      <section>
+        <h2>📊 Agrégation, regroupement et tri</h2>
+      
+        <p>
+          SQL permet de faire plus que simplement afficher des lignes : on peut agréger les données pour obtenir des totaux, des moyennes, des comptages, etc. 
+          Ces opérations sont souvent associées à <code class="sql-keyword">GROUP BY</code> pour regrouper les lignes similaires, et à <code class="sql-keyword">ORDER BY</code> pour trier les résultats.
+        </p>
+      
+        <p>
+          Les fonctions d’agrégation incluent : <code>COUNT()</code>, <code>SUM()</code>, <code>AVG()</code>, <code>MIN()</code>, <code>MAX()</code>. 
+          Lorsqu'on les utilise avec <code>GROUP BY</code>, chaque groupe devient une ligne du résultat.
+        </p>
+      
+        <article>
+          <p class="example-table">Table <code>ventes</code></p>
+          <p>Table d’exemple utilisée dans les articles ci-dessous :</p>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>id</th><th>client</th><th>article</th><th>quantité</th><th>prix_unitaire</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Alice</td><td>Stylo</td><td>10</td><td>1.5</td></tr>
+                <tr><td>2</td><td>Bob</td><td>Stylo</td><td>5</td><td>1.5</td></tr>
+                <tr><td>3</td><td>Alice</td><td>Cahier</td><td>3</td><td>2.0</td></tr>
+                <tr><td>4</td><td>Bob</td><td>Cahier</td><td>1</td><td>2.0</td></tr>
+                <tr><td>5</td><td>Alice</td><td>Gomme</td><td>2</td><td>0.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>COUNT()</code> – Compter les lignes</h3>
+          <p>Permet de compter combien de lignes sont associées à chaque groupe.</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> client, <span class="sql-keyword">COUNT</span>(*) <span class="sql-keyword">AS</span> nb_achats
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> client;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>client</th><th>nb_achats</th></tr></thead>
+              <tbody>
+                <tr><td>Alice</td><td>3</td></tr>
+                <tr><td>Bob</td><td>2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>SUM()</code> – Faire la somme</h3>
+          <p>Totaliser les quantités par article :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> article, <span class="sql-keyword">SUM</span>(quantité) <span class="sql-keyword">AS</span> total_vendu
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> article;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>article</th><th>total_vendu</th></tr></thead>
+              <tbody>
+                <tr><td>Stylo</td><td>15</td></tr>
+                <tr><td>Cahier</td><td>4</td></tr>
+                <tr><td>Gomme</td><td>2</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>AVG()</code> – Calculer une moyenne</h3>
+          <p>Calcule la moyenne d’une valeur numérique. Ici, le prix unitaire moyen par article :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> article, <span class="sql-keyword">AVG</span>(prix_unitaire) <span class="sql-keyword">AS</span> prix_moyen
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> article;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>article</th><th>prix_moyen</th></tr></thead>
+              <tbody>
+                <tr><td>Stylo</td><td>1.5</td></tr>
+                <tr><td>Cahier</td><td>2.0</td></tr>
+                <tr><td>Gomme</td><td>0.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3>Combiner les colonnes pour des calculs personnalisés</h3>
+          <p>On peut additionner des produits, par exemple pour obtenir un chiffre d'affaires :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> client, <span class="sql-keyword">SUM</span>(quantité * prix_unitaire) <span class="sql-keyword">AS</span> chiffre_affaires
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> client;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>client</th><th>chiffre_affaires</th></tr></thead>
+              <tbody>
+                <tr><td>Alice</td><td>21.5</td></tr>
+                <tr><td>Bob</td><td>9.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>ORDER BY</code> – Trier les résultats</h3>
+          <p>Permet de trier les groupes. Par défaut, en ordre croissant. On peut ajouter <code>DESC</code> pour trier en décroissant.</p>
+          <p><strong>Exemple :</strong> trier les clients selon leur chiffre d'affaires décroissant :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> client, <span class="sql-keyword">SUM</span>(quantité * prix_unitaire) <span class="sql-keyword">AS</span> chiffre_affaires
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> client
+<span class="sql-keyword">ORDER BY</span> chiffre_affaires <span class="sql-keyword">DESC</span>;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>client</th><th>chiffre_affaires</th></tr></thead>
+              <tbody>
+                <tr><td>Alice</td><td>21.5</td></tr>
+                <tr><td>Bob</td><td>9.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>HAVING</code> – Filtrer les groupes</h3>
+          <p><code>HAVING</code> permet de filtrer les résultats <em>après</em> un regroupement. À la différence de <code>WHERE</code> (qui agit ligne par ligne), <code>HAVING</code> agit groupe par groupe.</p>
+          <p><strong>Exemple :</strong> afficher les clients dont le chiffre d’affaires dépasse 10 € :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> client, <span class="sql-keyword">SUM</span>(quantité * prix_unitaire) <span class="sql-keyword">AS</span> chiffre_affaires
+<span class="sql-keyword">FROM</span> ventes
+<span class="sql-keyword">GROUP BY</span> client
+<span class="sql-keyword">HAVING</span> <span class="sql-keyword">SUM</span>(quantité * prix_unitaire) &gt; 10;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>client</th><th>chiffre_affaires</th></tr></thead>
+              <tbody>
+                <tr><td>Alice</td><td>21.5</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><strong>Remarque :</strong> les colonnes dans <code>HAVING</code> doivent être agrégées ou présentes dans le <code>GROUP BY</code>.</p>
+        </article>
+      
+      </section>      
+      
+      <section>
+        <h2>🧠 Sous-requêtes et comparaisons avancées</h2>
+        <p>
+          Les <strong>sous-requêtes</strong> permettent d’imbriquer une requête SQL à l’intérieur d’une autre. Elles sont utiles pour effectuer des calculs dynamiques (ex: moyenne, total), filtrer selon des données dépendantes d’un autre ensemble, ou construire des tables temporaires à la volée.
+        </p>
+        <br>
+        <p>
+          Bien que puissantes, elles peuvent être coûteuses en performance, notamment lorsqu’elles sont exécutées ligne par ligne (dans un <code class="sql-keyword">SELECT</code> ou <code class="sql-keyword">WHERE</code>). Il est souvent préférable, si possible, de les remplacer par des <strong>jointures</strong> ou des <strong>common table expressions</strong> (<code>WITH</code>). Cela dit, dans les cas simples ou pour isoler une logique, elles restent une excellente solution.
+        </p>
+        <article>
+          <p class="example-table">Table <code>produits</code></p>
+          <p>Table utilisée dans les exemples suivants :</p>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>id</th><th>nom</th><th>prix</th><th>categorie</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>Stylo</td><td>1.5</td><td>Fournitures</td></tr>
+                <tr><td>2</td><td>Cahier</td><td>2.0</td><td>Fournitures</td></tr>
+                <tr><td>3</td><td>Cartable</td><td>25.0</td><td>Bagagerie</td></tr>
+                <tr><td>4</td><td>Calculatrice</td><td>15.0</td><td>Électronique</td></tr>
+                <tr><td>5</td><td>Agenda</td><td>5.0</td><td>Papeterie</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3><code>WHERE</code> avec sous-requête</h3>
+          <p>On peut filtrer une table en comparant chaque ligne à une valeur calculée par une autre requête.</p>
+          <p><strong>Exemple :</strong> afficher les produits dont le prix est supérieur au prix moyen :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, prix
+<span class="sql-keyword">FROM</span> produits
+<span class="sql-keyword">WHERE</span> prix &gt; (
+  <span class="sql-keyword">SELECT</span> <span class="sql-keyword">AVG</span>(prix) 
+  <span class="sql-keyword">FROM</span> produits
+);
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>prix</th></tr></thead>
+              <tbody>
+                <tr><td>Cartable</td><td>25.0</td></tr>
+                <tr><td>Calculatrice</td><td>15.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3>Sous-requête dans <code>SELECT</code></h3>
+          <p>On peut insérer une sous-requête comme une "valeur calculée".</p>
+          <p><strong>Exemple :</strong> afficher chaque produit avec le prix moyen global pour comparaison :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> nom, prix,
+  (
+    <span class="sql-keyword">SELECT</span> <span class="sql-keyword">AVG</span>(prix) 
+    <span class="sql-keyword">FROM</span> produits
+  ) <span class="sql-keyword">AS</span> prix_moyen
+<span class="sql-keyword">FROM</span> produits;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>nom</th><th>prix</th><th>prix_moyen</th></tr></thead>
+              <tbody>
+                <tr><td>Stylo</td><td>1.5</td><td>9.7</td></tr>
+                <tr><td>Cahier</td><td>2.0</td><td>9.7</td></tr>
+                <tr><td>Cartable</td><td>25.0</td><td>9.7</td></tr>
+                <tr><td>Calculatrice</td><td>15.0</td><td>9.7</td></tr>
+                <tr><td>Agenda</td><td>5.0</td><td>9.7</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+        <article>
+          <h3>Sous-requête dans <code>FROM</code></h3>
+          <p>On peut intégrer une requête comme une "table temporaire". On lui donne un alias.</p>
+          <p><strong>Exemple :</strong> calculer le total dépensé par catégorie :</p>
+          <pre><code class="sql">
+<span class="sql-keyword">SELECT</span> categorie, total
+<span class="sql-keyword">FROM</span> (
+  <span class="sql-keyword">SELECT</span> categorie, <span class="sql-keyword">SUM</span>(prix) <span class="sql-keyword">AS</span> total
+  <span class="sql-keyword">FROM</span> produits
+  <span class="sql-keyword">GROUP BY</span> categorie
+) <span class="sql-keyword">AS</span> resume;
+          </code></pre>
+          <div class="result-block">
+            <table>
+              <thead><tr><th>categorie</th><th>total</th></tr></thead>
+              <tbody>
+                <tr><td>Fournitures</td><td>3.5</td></tr>
+                <tr><td>Bagagerie</td><td>25.0</td></tr>
+                <tr><td>Électronique</td><td>15.0</td></tr>
+                <tr><td>Papeterie</td><td>5.0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      
+      </section>      
+
+    </main>
+
+  </body>
+</html>

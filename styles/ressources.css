@@ -1,0 +1,185 @@
+/* ============================
+   📊 Style des résultats SQL
+============================ */
+.result-block {
+    margin: 2rem auto;
+    padding: 1rem;
+    max-width: var(--page-content-width);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+  
+  .result-block table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .result-block thead {
+    background-color: #f0f0f0;
+  }
+  
+  .result-block th,
+  .result-block td {
+    text-align: center;
+    padding: 0.75rem;
+    border: 1px solid white;
+  }
+  
+  .result-block th {
+    font-weight: bold;
+    background-color: #eaeaea;
+  }
+  
+  .result-block td {
+    background-color: #fcfcfc;
+  }
+  
+  /* 🌙 Thème sombre */
+  @media (prefers-color-scheme: dark) {
+    .result-block {
+      border-color: #444;
+      box-shadow: none;
+    }
+  
+    .result-block thead {
+      background-color: #333;
+    }
+  
+    .result-block th,
+    .result-block td {
+      border-color: #444;
+      background-color: #1e1e1e;
+      color: #e0e0e0;
+    }
+  
+    .result-block th {
+      background-color: #2c2c2c;
+    }
+  } 
+  
+/* ====================================
+    🥅 Exemple de tableau
+===================================== */
+p.example-table {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1rem 0;
+}  
+
+/* ====================================
+    📚 Table des matières
+==================================== */
+
+#toc {
+    position: fixed;
+    top: 90px;
+    left: 20px;
+    width: 220px;
+    max-height: 60vh;
+    overflow-y: auto;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.88rem;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  }
+  
+  #toc h2 {
+    font-size: 0.95rem;
+    margin: 0 0 1rem 0;
+    color: #333;
+  }
+  
+  #toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  
+  #toc li {
+    margin: 0;
+  }
+  
+  #toc a {
+    text-decoration: none;
+    color: #0077cc;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: block;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  #toc a:hover {
+    background-color: #e6f2ff;
+  }
+  
+  #toc a.active {
+    font-weight: bold;
+    color: #0055aa;
+    background-color: #dceeff;
+  }
+
+/* Pour tous les <h3> qui servent d’ancrages */
+main h3[id] {
+    /* Tampon avant l’élément quand on scroll vers lui */
+    scroll-margin-top: 5.5rem;
+  }
+
+  /* Par défaut (desktop) */
+#toc-toggle {
+    display: none;
+  }
+  
+  /* Quand <1650px : on cache le sommaire et on affiche le toggle */
+  @media (max-width: 1650px) {
+    #toc nav, #toc ul {
+      display: none;
+    }
+    #toc-toggle {
+      display: block;
+      background: none;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    /* Quand le sommaire est ouvert */
+    #toc.open nav, 
+    #toc.open ul {
+      display: block;
+    }
+  }
+  
+  /* 🌙 Thème sombre automatique */
+  @media (prefers-color-scheme: dark) {
+    #toc {
+      background-color: #1e1e1e;
+      border-color: #333;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+  
+    #toc h2, #toc-toggle {
+      color: #eee;
+    }
+  
+    #toc a {
+      color: #8ab4f8;
+    }
+  
+    #toc a:hover {
+      background-color: #2c3e50;
+    }
+  
+    #toc a.active {
+      background-color: #314d77;
+      color: #ffffff;
+    }
+  }
+  
