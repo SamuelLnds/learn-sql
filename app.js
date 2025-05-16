@@ -155,6 +155,15 @@ document.addEventListener('DOMContentLoaded', () => {
   const tocGen  = new TOCGenerator();
   tocGen.build();
 
+  // Highlight au clic
+  const tocLinks = document.querySelectorAll('#toc-list a');
+  tocLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      link.classList.add('active');
+    });
+  });
+
   // Observe les titres
   const tocHigh = new TOCHighlighter();
   tocHigh.observe();
@@ -176,13 +185,5 @@ document.addEventListener('DOMContentLoaded', () => {
       const isOpen = toc.classList.toggle('open');
       toggleBtn.setAttribute('aria-expanded', isOpen);
     });
-
-    // Fermer automatiquement quand on clique sur un lien du TOC
-    toc.querySelectorAll('#toc-list a').forEach(link =>
-      link.addEventListener('click', () => {
-        toc.classList.remove('open');
-        toggleBtn.setAttribute('aria-expanded', false);
-      })
-    );
   }
 });
