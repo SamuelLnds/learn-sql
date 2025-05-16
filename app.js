@@ -123,15 +123,14 @@ class TOCHighlighter {
   _onIntersect(entries) {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
-      const hash = `./#${entry.target.id}`;
+      const targetId = entry.target.id;
       this.links.forEach(link => {
-        const isActive = (link.hash === hash);
+        // extrait la partie après le '#'
+        const [, linkHash] = link.href.split('#');
+        const isActive = (linkHash === targetId);
         link.classList.toggle('active', isActive);
-        if (isActive) {
-          // Scroll le lien actif dans le conteneur #toc
-          link.scrollIntoView({ block: 'nearest' });
-        }
-      });
+        if (isActive) link.scrollIntoView({ block: 'nearest' });
+      });      
     });
   }
 }
