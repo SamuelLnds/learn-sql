@@ -9,7 +9,7 @@ class Router {
     const path = location.pathname;
     const onIndex = path.endsWith('/') || path.endsWith('/index.html');
     if (!onIndex) {
-      window.location.href = `/?id=${id.replace('ex', '')}`;
+      window.location.href = `./?id=${id.replace('ex', '')}`;
       return true;
     }
     return false;
