@@ -77,7 +77,7 @@ class TOCGenerator {
       if (!h3.id) h3.id = TOCGenerator.slugify(h3.textContent);
       const li = document.createElement('li');
       const a  = document.createElement('a');
-      a.setAttribute('href', `./#${h3.id}`);
+      a.href = `ressources/#${h3.id}`;
       a.textContent = h3.textContent.replace(/<\/?code>/g, '');
       li.appendChild(a);
       this.tocList.appendChild(li);
