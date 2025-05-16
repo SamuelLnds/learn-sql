@@ -49,7 +49,7 @@ FROM ...</code></pre>
             <div class="correction-header">💡 Pourquoi cette requête ?</div>
             <div class="correction-body">
               <p>Cette requête permet d’inspecter rapidement le contenu de la table <code>F_Article</code>. On utilise <code>TOP 20</code> pour limiter les résultats à un nombre raisonnable.</p>
-              <pre><code class="sql"><span class="sql-keyword">SELECT</span> TOP 20 AR_Ref, AR_PrixVen
+              <pre><code class="sql"><span class="sql-keyword">SELECT</span> TOP 20 AR_Ref Reference, AR_PrixVen Prix vente
 <span class="sql-keyword">FROM</span> F_Article;</code></pre>
             </div>
           </div>          
@@ -58,7 +58,7 @@ FROM ...</code></pre>
       <section id="ex2" class="exercise">
         <h2>🟦 Niveau 2 – Jointure entre tables</h2>
         <p class="objectif"><strong>Objectif :</strong> Apprendre à relier des tables pour enrichir les données.</p>
-        <p class="consigne"><strong>Consigne :</strong> Pour une commande fournisseur (DO_Type = 6) avec la pièce 'FA0000123', affiche : la référence article (AR_Ref), le prix unitaire (AR_PrixVen), la quantité (DL_Qte).</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour une commande fournisseur (DO_Type = 6) avec la pièce 'FA00006', affiche : la référence article (AR_Ref), le prix unitaire (AR_PrixVen), la quantité (DL_Qte) et le numéro pièce du document (DO_Piece).</p>
         <p class="table-info"><strong>Tables :</strong> <code>F_Article, F_DocLigne, F_DocEntete</code></p>
       
         <pre><code class="sql">SELECT ...
@@ -72,11 +72,11 @@ WHERE ...</code></pre>
           <div class="correction-header">💡 Pourquoi cette requête ?</div>
           <div class="correction-body">
             <p>On utilise ici une jointure interne (INNER JOIN) pour ne conserver que les lignes qui correspondent à une commande fournisseur donnée. Cela permet de lier les articles aux lignes de commande, puis à leur en-tête, en filtrant sur DO_Type = 6.</p>
-            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref, a.AR_PrixVen, l.DL_Qte
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref Reference, a.AR_PrixVen Prix vente, l.DL_Qte Quantite, d.DO_Piece Piece
 <span class="sql-keyword">FROM</span> F_Article a
 <span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
 <span class="sql-keyword">JOIN</span> F_DocEntete d <span class="sql-keyword">ON</span> l.DO_Piece = d.DO_Piece
-<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA0000123</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>;</code></pre>                
+<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA00006</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>;</code></pre>                
           </div>
         </div>
       </section>
@@ -98,7 +98,7 @@ WHERE ...</code></pre>
           <div class="correction-header">💡 Pourquoi cette requête ?</div>
           <div class="correction-body">
             <p>Le LEFT JOIN permet de garder tous les articles, qu’ils soient utilisés ou non. Grâce au filtre WHERE l.AR_Ref IS NULL, on récupère uniquement ceux qui ne sont liés à aucune ligne de document.</p>
-            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref, a.AR_PrixVen
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> a.AR_Ref Reference
 <span class="sql-keyword">FROM</span> F_Article a
 <span class="sql-keyword">LEFT JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
 <span class="sql-keyword">WHERE</span> l.AR_Ref <span class="sql-keyword">IS</span> <span class="sql-keyword">NULL</span>;</code></pre>
@@ -109,7 +109,7 @@ WHERE ...</code></pre>
       <section id="ex4" class="exercise">
         <h2>🟧 Niveau 4 – Agrégation par article</h2>
         <p class="objectif"><strong>Objectif :</strong> Faire des calculs de totaux et montants groupés.</p>
-        <p class="consigne"><strong>Consigne :</strong> Pour la pièce 'FA0000123', affiche : la référence article, la quantité totale, le montant total (quantité × prix unitaire).</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour la pièce 'FA00006', affiche : la référence article, la quantité totale, le montant total (quantité × prix unitaire).</p>
         <p class="table-info"><strong>Tables :</strong> <code>F_Article, F_DocLigne, F_DocEntete</code></p>
       
         <pre><code class="sql">SELECT ...
@@ -129,7 +129,7 @@ a.AR_Ref,
 <span class="sql-keyword">FROM</span> F_Article a
 <span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> a.AR_Ref = l.AR_Ref
 <span class="sql-keyword">JOIN</span> F_DocEntete d <span class="sql-keyword">ON</span> l.DO_Piece = d.DO_Piece
-<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA0000123</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>
+<span class="sql-keyword">WHERE</span> d.DO_Piece = '<span class="sql-func">FA00006</span>' <span class="sql-keyword">AND</span> d.DO_Type = <span class="sql-func">6</span>
 <span class="sql-keyword">GROUP BY</span> a.AR_Ref;</code></pre>                
           </div>
         </div>
@@ -138,7 +138,7 @@ a.AR_Ref,
       <section id="ex5" class="exercise">
         <h2>🟥 Niveau 5 – Agrégation par client et par année</h2>
         <p class="objectif"><strong>Objectif :</strong> Travailler sur des regroupements complexes avec des conditions temporelles.</p>
-        <p class="consigne"><strong>Consigne :</strong> Pour chaque client, affiche : le nombre de documents de vente en 2024, le chiffre d’affaires total. Trie les résultats du plus gros au plus petit chiffre d'affaires.</p>
+        <p class="consigne"><strong>Consigne :</strong> Pour chaque client, affiche : le nombre de documents de vente en 2023, le chiffre d’affaires total. Trie les résultats du plus gros au plus petit chiffre d'affaires.</p>
         <p class="table-info"><strong>Tables :</strong> <code>F_DocEntete, F_DocLigne</code></p>
       
         <pre><code class="sql">SELECT ...
@@ -152,15 +152,15 @@ ORDER BY ...</code></pre>
         <div class="correction hidden">
           <div class="correction-header">💡 Pourquoi cette requête ?</div>
           <div class="correction-body">
-            <p>On filtre les documents de type vente (DO_Type IN (6,7)) créés en 2024. La jointure permet d’associer les entêtes (F_DocEntete) aux lignes (F_DocLigne) et d’agréger les montants par client (CT_Num).</p>
+            <p>On filtre les documents de type vente (DO_Type IN (6,7)) créés en 2023. La jointure permet d’associer les entêtes (F_DocEntete) aux lignes (F_DocLigne) et d’agréger les montants par client (CT_NumPayeur).</p>
             <pre><code class="sql"><span class="sql-keyword">SELECT</span> 
-d.CT_Num <span class="sql-keyword">AS</span> CodeClient,
+d.CT_NumPayeur <span class="sql-keyword">AS</span> CodeClient,
 <span class="sql-keyword">COUNT</span>(<span class="sql-keyword">DISTINCT</span> d.DO_Piece) <span class="sql-keyword">AS</span> NbDocuments,
 <span class="sql-keyword">SUM</span>(l.DL_Qte * l.DL_PrixUnitaire) <span class="sql-keyword">AS</span> ChiffreAffaires
 <span class="sql-keyword">FROM</span> F_DocEntete d
 <span class="sql-keyword">JOIN</span> F_DocLigne l <span class="sql-keyword">ON</span> d.DO_Piece = l.DO_Piece
-<span class="sql-keyword">WHERE</span> d.DO_Type <span class="sql-keyword">IN</span> (<span class="sql-func">6</span>, <span class="sql-func">7</span>) <span class="sql-keyword">AND</span> <span class="sql-func">YEAR</span>(d.DO_Date) = <span class="sql-func">2024</span>
-<span class="sql-keyword">GROUP BY</span> d.CT_Num
+<span class="sql-keyword">WHERE</span> d.DO_Type <span class="sql-keyword">IN</span> (<span class="sql-func">6</span>, <span class="sql-func">7</span>) <span class="sql-keyword">AND</span> <span class="sql-func">YEAR</span>(d.DO_Date) = <span class="sql-func">2023</span>
+<span class="sql-keyword">GROUP BY</span> d.CT_NumPayeur
 <span class="sql-keyword">ORDER BY</span> ChiffreAffaires <span class="sql-keyword">DESC</span>;</code></pre>
           </div>
         </div>
@@ -169,7 +169,7 @@ d.CT_Num <span class="sql-keyword">AS</span> CodeClient,
       <section id="ex6" class="exercise">
         <h2>🟪 Niveau 6 – Sous-requêtes et comparaison dynamique</h2>
         <p class="objectif"><strong>Objectif :</strong> Apprendre à comparer des données à des agrégats globaux, et découvrir les sous-requêtes scalaires.</p>
-        <p class="consigne"><strong>Consigne :</strong> Affiche les articles dont le prix de vente est supérieur à la moyenne et dont le prix d’achat moyen (AR_PrixAch) est non nul. Trie les résultats par prix de vente décroissant.</p>
+        <p class="consigne"><strong>Consigne :</strong> Affiche les articles dont le prix de vente est supérieur à la moyenne des prix de vente et dont le prix d’achat moyen (AR_PrixAch) est non nul. Trie les résultats par prix de vente décroissant.</p>
         <p class="table-info"><strong>Tables :</strong> <code>F_Article</code></p>
       
         <pre><code class="sql">SELECT ...
@@ -182,7 +182,7 @@ ORDER BY ...</code></pre>
           <div class="correction-header">💡 Pourquoi cette requête ?</div>
           <div class="correction-body">
             <p>Cette requête compare chaque article à la moyenne générale des prix de vente. Elle utilise une sous-requête scalaire dans le WHERE, et vérifie aussi que le prix d’achat est bien renseigné.</p>
-            <pre><code class="sql"><span class="sql-keyword">SELECT</span> AR_Ref, AR_PrixVen, AR_PrixAch
+            <pre><code class="sql"><span class="sql-keyword">SELECT</span> AR_Ref Reference, AR_PrixVen Prix vente, AR_PrixAch Prix achat
 <span class="sql-keyword">FROM</span> F_Article
 <span class="sql-keyword">WHERE</span> 
     AR_PrixVen &gt; (<span class="sql-keyword">SELECT</span> <span class="sql-keyword">AVG</span>(AR_PrixVen) <span class="sql-keyword">FROM</span> F_Article)
