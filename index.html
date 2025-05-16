@@ -32,15 +32,34 @@ permalink: /
         </p>
         <p class="consigne">
           <strong>Consigne :</strong> Affiche les
-          <strong>20 premiers articles</strong> avec leur référence
+          <strong>5 premiers articles</strong> avec leur référence
           (<code>AR_Ref</code>) et leur prix de vente (<code>AR_PrixVen</code>).
         </p>
         <p class="table-info">
           <strong>Table :</strong> <code>F_Article</code>
         </p>
 
-        <pre><code class="sql">SELECT TOP 20 ... 
+        <pre><code class="sql">SELECT TOP 5 ... 
 FROM ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Prix vente</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BAAR01</td><td>372.00</td></tr>
+              <tr><td>BAOR01</td><td>588.00</td></tr>
+              <tr><td>BRAAR10</td><td>552.00</td></tr>
+              <tr><td>CHAOR42</td><td>235.20</td></tr>
+              <tr><td>CHFE01</td><td>12.60</td></tr>
+            </tbody>
+          </table>
+        </div>
 
         <button class="toggle-btn" onclick="toggleCorrection(this)">
           Afficher la correction
@@ -48,8 +67,8 @@ FROM ...</code></pre>
         <div class="correction hidden">
             <div class="correction-header">💡 Pourquoi cette requête ?</div>
             <div class="correction-body">
-              <p>Cette requête permet d’inspecter rapidement le contenu de la table <code>F_Article</code>. On utilise <code>TOP 20</code> pour limiter les résultats à un nombre raisonnable.</p>
-              <pre><code class="sql"><span class="sql-keyword">SELECT</span> TOP 20 AR_Ref 'Reference', AR_PrixVen 'Prix vente'
+              <p>Cette requête permet d’inspecter rapidement le contenu de la table <code>F_Article</code>. On utilise <code>TOP 5</code> pour limiter les résultats à un nombre raisonnable.</p>
+              <pre><code class="sql"><span class="sql-keyword">SELECT</span> TOP 5 AR_Ref 'Reference', AR_PrixVen 'Prix vente'
 <span class="sql-keyword">FROM</span> F_Article;</code></pre>
             </div>
           </div>          
@@ -66,6 +85,28 @@ FROM ...
 JOIN ...
 ON ...
 WHERE ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Prix vente</th>
+                <th>Quantité</th>
+                <th>Pièce</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BAAR01</td><td>372.00</td><td>1.00</td><td>FA00006</td></tr>
+              <tr><td>BAOR01</td><td>588.00</td><td>1.00</td><td>FA00006</td></tr>
+              <tr><td>BAOR01</td><td>588.00</td><td>2.00</td><td>FA00006</td></tr>
+              <tr><td>BAOR01</td><td>588.00</td><td>1.00</td><td>FA00006</td></tr>
+              <tr><td>MOOR002</td><td>2189.00</td><td>1.00</td><td>FA00006</td></tr>
+              <tr><td>PIL377REN</td><td>26.25</td><td>1.00</td><td>FA00006</td></tr>
+            </tbody>
+          </table>
+        </div>
       
         <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
         <div class="correction hidden">
@@ -92,6 +133,29 @@ FROM ...
 LEFT JOIN ...
 ON ...
 WHERE ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>PRESTFORM</td></tr>
+              <tr><td>PRESTFORMSALLE</td></tr>
+              <tr><td>PRESTFORMSUPPORT</td></tr>
+              <tr><td>RESTHORLOGE</td></tr>
+              <tr><td>SVCTETAN</td></tr>
+              <tr><td>SVCTTEST</td></tr>
+              <tr><td>ZESCOMPTE</td></tr>
+              <tr><td>ZEXPRESS</td></tr>
+              <tr><td>ZFIDELITE</td></tr>
+              <tr><td>ZREMISE</td></tr>
+            </tbody>
+          </table>
+        </div>
       
         <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
         <div class="correction hidden">
@@ -116,6 +180,25 @@ WHERE ...</code></pre>
 FROM ...
 JOIN ...
 GROUP BY ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Quantité totale</th>
+                <th>Montant total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>BAAR01</td><td>1.00</td><td>372.00</td></tr>
+              <tr><td>BAOR01</td><td>4.00</td><td>2352.00</td></tr>
+              <tr><td>MOOR002</td><td>1.00</td><td>2189.00</td></tr>
+              <tr><td>PIL377REN</td><td>1.00</td><td>26.25</td></tr>
+            </tbody>
+          </table>
+        </div>
       
         <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
         <div class="correction hidden">
@@ -147,6 +230,28 @@ JOIN ...
 WHERE ...
 GROUP BY ...
 ORDER BY ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Code client</th>
+                <th>Nombre de documents</th>
+                <th>Chiffre d'affaires</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>CRIST</td><td>1</td><td>26500.00</td></tr>
+              <tr><td>CISEL</td><td>1</td><td>19240.00</td></tr>
+              <tr><td>QUART</td><td>1</td><td>18345.30</td></tr>
+              <tr><td>GRENA</td><td>1</td><td>4939.25</td></tr>
+              <tr><td>DIAMA</td><td>2</td><td>2076.67</td></tr>
+              <tr><td>CARAT</td><td>1</td><td>590.00</td></tr>
+              <tr><td>PLATI</td><td>1</td><td>590.00</td></tr>
+            </tbody>
+          </table>
+        </div>
       
         <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
         <div class="correction hidden">
@@ -176,6 +281,28 @@ d.CT_NumPayeur <span class="sql-keyword">AS</span> CodeClient,
 FROM ...
 WHERE ...
 ORDER BY ...</code></pre>
+
+        <div class="result-block">
+          <h3 style="margin-top: 0;">Résultat attendu :</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Référence</th>
+                <th>Prix vente</th>
+                <th>Prix achat</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>LINGOR18</td><td>80700.00</td><td>67250.00</td></tr>
+              <tr><td>SVMATETAN</td><td>7040.00</td><td>3200.00</td></tr>
+              <tr><td>SVMATGRAV</td><td>3916.00</td><td>1780.00</td></tr>
+              <tr><td>SVMATEST</td><td>3115.20</td><td>1416.00</td></tr>
+              <tr><td>SETA</td><td>2845.50</td><td>1355.00</td></tr>
+              <tr><td>MOOR002</td><td>2189.00</td><td>995.00</td></tr>
+              <tr><td>TIMBAR</td><td>1830.00</td><td>871.00</td></tr>
+            </tbody>
+          </table>
+        </div>
       
         <button class="toggle-btn" onclick="toggleCorrection(this)">Afficher la correction</button>
         <div class="correction hidden">
