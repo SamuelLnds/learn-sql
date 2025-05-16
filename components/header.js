@@ -17,11 +17,22 @@ class NavigationManager {
   init() {
     if (!this.navbar) return;
 
-    // Délégué : un seul listener sur le <ul>
     this.navbar.addEventListener('click', e => {
       const btn = e.target.closest('button[data-id]');
       if (!btn) return;
-      this.showExercise(btn.dataset.id);
+      const exId = btn.dataset.id; // "ex1", "ex2", ...
+    
+      // Si on n'est pas sur la page d'exos (chemin != "/learn-sql/" ou "/learn-sql/index.html")
+      const p = location.pathname;
+      const isOnIndex = p.endsWith('/') || p.endsWith('index.html');
+      if (!isOnIndex) {
+        // redirige vers la racine des exos avec ?id=1
+        window.location.href = `/learn-sql/?id=${exId.replace('ex','')}`;
+        return;
+      }
+    
+      // Sinon, on est bien sur la page d'exos :
+      this.showExercise(exId);
       this._highlightButton(btn);
     });
 
