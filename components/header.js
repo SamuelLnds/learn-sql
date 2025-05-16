@@ -17,6 +17,7 @@ class NavigationManager {
   init() {
     if (!this.navbar) return;
 
+    const BASE = '/learn-sql/';
     this.navbar.addEventListener('click', e => {
       const btn = e.target.closest('button[data-id]');
       if (!btn) return;
@@ -24,7 +25,7 @@ class NavigationManager {
     
       // Si on n'est pas sur la page d'exos (chemin != "/learn-sql/" ou "/learn-sql/index.html")
       const p = location.pathname;
-      const isOnIndex = p.endsWith('/') || p.endsWith('index.html');
+      const isOnIndex = (p === BASE || p === BASE + 'index.html');
       if (!isOnIndex) {
         // redirige vers la racine des exos avec ?id=1
         window.location.href = `/learn-sql/?id=${exId.replace('ex','')}`;
